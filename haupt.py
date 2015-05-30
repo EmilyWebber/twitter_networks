@@ -37,7 +37,12 @@ def drink_from_firehose(twitter_api, hashtag):
     water = stream.statuses.filter(track=query)
 
     for tweet in water:
-        print tweet['text']
+        print tweet['user']['name'], ": ", tweet['text']
+
+'''
+def run_cron_job:
+# try, except:  except = email bridgit & j.p.
+'''
 
 
 def drinking_fountain():
