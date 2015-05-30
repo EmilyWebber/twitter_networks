@@ -27,7 +27,7 @@ def main():
 
 
 #    drinking_fountain()
-    drink_from_firehose(authenticator(keys)), hashtag)
+    drink_from_firehose(authenticator(keys), hashtag)
 
 
 def drink_from_firehose(twitter_api, hashtag):
