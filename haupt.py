@@ -23,7 +23,24 @@ def main():
 
     keys = key_grabber(sys.argv[1])
     hashtag = sys.argv[2]
-    search_tag = sys.argv[3]
+#    search_tag = sys.argv[3]
+
+
+#    drinking_fountain(keys, hashtag)
+    firehose(keys, hashtag)
+
+
+def firehose(keys, hashtag):
+
+
+    water = drink_from_firehose(authenticator(keys), hashtag)
+
+    for tweet in water:
+        print tweet
+
+
+
+def drinking_fountain():
 
     results = search_hashtag(authenticator(keys), hashtag)
     many_to_mongodb(results['statuses'], 'results', hashtag)
@@ -31,9 +48,8 @@ def main():
     cursor = get_from_mongodb('results', hashtag)
     #cursor = get_mongodb('results')
 
-    print cursor
     print_cursor_contents(cursor, 'text')
-    print_cursor_contents(cursor, 'user')
+#    print_cursor_contents(cursor, 'user')
 
 
 
@@ -55,6 +71,7 @@ def authenticator(keys):
     return api
 
 
+
 def search_hashtag(twitter_api, hashtag):
 
     # include a RegEx to search different versions of the hashtag?
@@ -62,6 +79,14 @@ def search_hashtag(twitter_api, hashtag):
 
     query = 'q=%23' + hashtag# + '&count=1000'
     return twitter_api.search.tweets(q=query)
+
+
+
+def drink_from_firehose(twitter_api, hashtag):
+    
+    query = 'q=%23' + hashtag# + '&count=1000'
+    stream = twitter.TwitterStream(auth=twitter_api.auth)
+    return stream.statuses.filter(track=query)
 
 
 def one_to_mongodb(tweet, db, collection):  # probablly need **kwargs
@@ -72,8 +97,8 @@ def one_to_mongodb(tweet, db, collection):  # probablly need **kwargs
 
 def many_to_mongodb(tweets, db, collection):  # probablly need **kwargs
     client = pymongo.MongoClient()
-    database = client.db
-    mongo_collection = database.collection
+    database = client[db]
+    mongo_collection = database[collection]
     mongo_collection.insert_many(tweets)
 
 def get_from_mongodb(db, collection):
@@ -106,7 +131,6 @@ def print_cursor_contents(cursor, key):
     else:
         for data in cursor:
             print data
-
 
 
 
