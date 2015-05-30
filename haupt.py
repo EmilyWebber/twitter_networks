@@ -6,7 +6,6 @@ import csv
 import twitter
 import json
 import pymongo
-from helpers import print_cursor_contents
 
 '''
 A significant portion of set up help was gleaned from the following site:
