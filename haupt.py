@@ -26,18 +26,18 @@ def main():
 #    search_tag = sys.argv[3]
 
 
-#    drinking_fountain(keys, hashtag)
-    firehose(keys, hashtag)
+#    drinking_fountain()
+    drink_from_firehose(authenticator(keys)), hashtag)
 
 
-def firehose(keys, hashtag):
-
-
-    water = drink_from_firehose(authenticator(keys), hashtag)
+def drink_from_firehose(twitter_api, hashtag):
+    
+    query = 'q=%23' + hashtag# + '&count=1000'
+    stream = twitter.TwitterStream(auth=twitter_api.auth)
+    water = stream.statuses.filter(track=query)
 
     for tweet in water:
-        print tweet
-
+        print tweet['user']
 
 
 def drinking_fountain():
@@ -82,11 +82,6 @@ def search_hashtag(twitter_api, hashtag):
 
 
 
-def drink_from_firehose(twitter_api, hashtag):
-    
-    query = 'q=%23' + hashtag# + '&count=1000'
-    stream = twitter.TwitterStream(auth=twitter_api.auth)
-    return stream.statuses.filter(track=query)
 
 
 def one_to_mongodb(tweet, db, collection):  # probablly need **kwargs
