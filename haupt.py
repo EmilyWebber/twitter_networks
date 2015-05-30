@@ -32,12 +32,12 @@ def main():
 
 def drink_from_firehose(twitter_api, hashtag):
     
-    query = 'q=%23' + hashtag# + '&count=1000'
+    query = hashtag 
     stream = twitter.TwitterStream(auth=twitter_api.auth)
     water = stream.statuses.filter(track=query)
 
     for tweet in water:
-        print tweet['user']
+        print tweet['text']
 
 
 def drinking_fountain():
@@ -77,7 +77,7 @@ def search_hashtag(twitter_api, hashtag):
     # include a RegEx to search different versions of the hashtag?
     # OR %23blacklivesmatter+%23BlackLivesMatter+...
 
-    query = 'q=%23' + hashtag# + '&count=1000'
+    query = 'q=%23' + hashtag + '&count=1000'
     return twitter_api.search.tweets(q=query)
 
 
