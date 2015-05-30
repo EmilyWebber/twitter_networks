@@ -38,20 +38,8 @@ def main():
 
 
 def key_grabber(txt_file):
-   # keys = []
-
     key_file = open(txt_file, 'r')
     return key_file.read().split(',')[:4]
-'''
-    with open(key_file, 'r') as f:
-        rdr = csv.reader(f, delimiter=',')
-        for i in rdr:
-            for j in i:
-                keys.append(j)
-    return keys
-'''
-
-
 
 
 def authenticator(keys):
