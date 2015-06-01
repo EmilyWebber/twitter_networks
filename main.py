@@ -77,6 +77,40 @@ def firehose(twitter_api, write_db, query):
         #print type(output), ' : ', output
         #return tweet
 
+'''
+def friender(friends, screen_name=None, 
+    for friend in friends:
+        if friend is None:
+            get_friends(
+        else:
+            try:
+                print friend['screen_name']
+            else:
+                print "No Screen Name"
+'''
+
+def get_friends(twitter_api, screen_name=None, user_id=None, cursor=None):
+    #if screen_name:
+     #   friends = twitter_api.friends(screen_name=screen_name, cursor=cursor)
+
+    #else:
+     #   friends = twitter_api.friends(user_id=user_id, cursor=cursor)
+
+
+    #friends = twitter_api.friends.list(screen_name=screen_name, count=5000)
+    friends = twitter_api.friends.ids(screen_name=screen_name, count=5000)
+    i = 0
+    for friend in friends['ids']:
+        i += 1
+        print i, friend
+#    for friend in friends['users']:
+ #       i += 1
+  #      print i, friend['screen_name']
+
+
+
+
+
 ######################
 ## TWITTER TO MONGO ##
 ######################
@@ -153,10 +187,13 @@ if __name__ == '__main__':
     keys = parse_keys(sys.argv[1])
     query = sys.argv[2]
     write_db = sys.argv[3]
+    friends_of_screen_name = sys.argv[4]
+    friends_of_user_id = sys.argv[5]
 
     twitter_api = oauth_login(keys)
 
-    firehose(twitter_api, write_db, query)
+    #firehose(twitter_api, write_db, query)
+    print get_friends(twitter_api, screen_name = friends_of_screen_name)
 
    # looper()
 ''' 
