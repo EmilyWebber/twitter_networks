@@ -3,6 +3,7 @@ import sys
 import json
 import pymongo as pm
 import time
+import datetime
 
 #######################
 ## AUTHORIZE TWITTER ##
@@ -58,7 +59,8 @@ def firehose(twitter_api, write_db, query):
 
     for tweet in stream:
         save_to_mongo(tweet, write_db, query)
-        print tweet['user']['screen_name']
+        print time.time()
+        #print tweet['user']['screen_name']
         #time.sleep(6)
         #output = tweet['user']['screen_name']
         #print type(output), ' : ', output
@@ -127,12 +129,14 @@ def test_print(tweets, database, collection):
 #        print document
 
 #----------------------
-
+'''
 def looper():
     try:
         firehose(twitter_api, write_db, query)
     except:
+        print datetime.datetime.now().time()
         looper()
+'''
 
 if __name__ == '__main__':
     keys = parse_keys(sys.argv[1])
@@ -141,7 +145,9 @@ if __name__ == '__main__':
 
     twitter_api = oauth_login(keys)
 
-    looper()
+    firehose(twitter_api, write_db, query)
+
+   # looper()
 ''' 
     data = get_cursor_contents(firehose(twitter_api, query), 'user',
                                'screen_name', 'screen_name')
