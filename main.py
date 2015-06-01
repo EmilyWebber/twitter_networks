@@ -5,6 +5,17 @@ import pymongo as pm
 import time
 import datetime
 
+
+'''
+A significant portion of set up help was gleaned from the following site:
+https://rawgit.com/ptwobrussell/Mining-the-Social-Web-2nd-Edition/master/
+    ipynb/html/Chapter%209%20-%20Twitter%20Cookbook.html
+'''
+
+
+
+
+
 #######################
 ## AUTHORIZE TWITTER ##
 #######################
