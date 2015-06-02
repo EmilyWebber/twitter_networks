@@ -162,7 +162,7 @@ def get_friends_ids(friends):
     cursor = friends['next_cursor']
     if cursor != 0:
         time.sleep(30)
-        friend_list += get_friends_ids(make_twitter_request(twitter_api.friends.ids(screen_name=handle, cursor=cursor, count=5000)))
+        friend_list += get_friends_ids(make_twitter_request(twitter_api.friends.ids, screen_name=handle, cursor=cursor, count=5000))
     return friend_list
 
 def get_friends_screen_names(friends):
@@ -176,7 +176,7 @@ def get_friends_screen_names(friends):
     cursor = friends['next_cursor']
     if cursor != 0:
         time.sleep(30)
-        friend_list += get_friends_screen_names(make_twitter_request(twitter_api.friends.ids(screen_name=handle, cursor=cursor, count=5000)))
+        friend_list += get_friends_screen_names(make_twitter_request(twitter_api.friends.ids, screen_name=handle, cursor=cursor, count=5000))
     return friend_list
 
 
@@ -191,7 +191,7 @@ def get_followers_ids(followers):
     cursor = followers['next_cursor']
     if cursor != 0:
         time.sleep(30)
-        follower_list += get_followers_ids(make_twitter_request(twitter_api.followers.ids(screen_name=handle, cursor=cursor, count=5000)))
+        follower_list += get_followers_ids(make_twitter_request(twitter_api.followers.ids, screen_name=handle, cursor=cursor, count=5000))
     return follower_list
 
 
@@ -206,7 +206,7 @@ def get_followers_screen_names(followers):
     cursor = followers['next_cursor']
     if cursor != 0:
         time.sleep(30)
-        follower_list += get_followers_screen_names(make_twitter_request(twitter_api.followers.ids(screen_name=handle, cursor=cursor, count=5000)))
+        follower_list += get_followers_screen_names(make_twitter_request(twitter_api.followers.ids, screen_name=handle, cursor=cursor, count=5000))
     return follower_list
 
 
@@ -230,8 +230,8 @@ def harvester(db, collection, destination_db, destination_collection):
 
     for user_id in user_ids:
         time.sleep(30)        
-        friends = make_twitter_request(twitter_api.friends.ids(user_id=user_id, count=5000))
-        followers = make_twitter_request(twitter_api.followers.ids(user_id=user_id, count=5000))
+        friends = make_twitter_request(twitter_api.friends.ids, user_id=user_id, count=5000)
+        followers = make_twitter_request(twitter_api.followers.ids, user_id=user_id, count=5000)
         fs_collector(id_or_sn, friends, followers, str(user_id), destination_db, destination_collection)
 
     
