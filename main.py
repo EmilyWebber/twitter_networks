@@ -79,35 +79,18 @@ def firehose(twitter_api, write_db, query):
 
 '''
 def friender(friends, screen_name=None, 
-    for friend in friends:
-        if friend is None:
-            get_friends(
-        else:
-            try:
-                print friend['screen_name']
-            else:
-                print "No Screen Name"
 '''
 
-def get_friends(twitter_api, screen_name=None, user_id=None, cursor=None):
-    #if screen_name:
-     #   friends = twitter_api.friends(screen_name=screen_name, cursor=cursor)
-
-    #else:
-     #   friends = twitter_api.friends(user_id=user_id, cursor=cursor)
-
-
-    #friends = twitter_api.friends.list(screen_name=screen_name, count=5000)
-    friends = twitter_api.friends.ids(screen_name=screen_name, count=5000)
-    i = 0
-    for friend in friends['ids']:
-        i += 1
-        print i, friend
-#    for friend in friends['users']:
- #       i += 1
-  #      print i, friend['screen_name']
-
-
+def get_friends(friends):
+    for friend in friends['users']:
+        if friend is not None:
+            try:
+                friend_list.append(friend['screen_name'])
+            except:
+                friend_list.append("NONE")
+    cursor = friends['next_cursor']
+    if cursor != 0:
+        get_friends(twitter_api.friends.list(screen_name=friends_of, cursor=cursor, count=5000))
 
 
 
@@ -174,40 +157,24 @@ def test_print(tweets, database, collection):
 #        print document
 
 #----------------------
-'''
-def looper():
-    try:
-        firehose(twitter_api, write_db, query)
-    except:
-        print datetime.datetime.now().time()
-        looper()
-'''
+
+
 
 if __name__ == '__main__':
     keys = parse_keys(sys.argv[1])
     query = sys.argv[2]
     write_db = sys.argv[3]
-    friends_of_screen_name = sys.argv[4]
-    friends_of_user_id = sys.argv[5]
+    friends_of = sys.argv[4]
 
     twitter_api = oauth_login(keys)
 
     #firehose(twitter_api, write_db, query)
-    print get_friends(twitter_api, screen_name = friends_of_screen_name)
 
-   # looper()
-''' 
-    data = get_cursor_contents(firehose(twitter_api, query), 'user',
-                               'screen_name', 'screen_name')
- 
-    save_to_mongo(data, write_db, query)
-'''
-    #results = twitter_search(twitter_api, query, max_results=10)
-#    print results
-#    save_to_mongo(results, 'test', 'test')
-#    load_from_mongo('test', 'test')
-#    many_to_mongodb(results, 'testdb', 'testcoll')
-#    get_from_mongodb('testdb','testcoll')
-#    print [ item for item in cursor ]
+    friend_list=[]
+    friends = twitter_api.friends.list(screen_name=friends_of, count=5000)
+    get_friends(friends)
 
-    #test_print(results, 'test', 'messi')
+    i = 0
+    for friend in friend_list:
+        i += 1
+        print i, friend
