@@ -153,61 +153,73 @@ def firehose(twitter_api, write_db, query):
 
 def get_friends_ids(friends):
     friend_list = []
-    for friend in friends['ids']:
-        if friend is not None:
-            try:
-                friend_list.append(friend)
-            except:
-                friend_list.append("NONE")
-    cursor = friends['next_cursor']
-    if cursor != 0:
-        time.sleep(30)
-        friend_list += get_friends_ids(make_twitter_request(twitter_api.friends.ids, screen_name=handle, cursor=cursor, count=5000))
-    return friend_list
+    if friends is None:
+        return friend_list
+    else:
+        for friend in friends['ids']:
+            if friend is not None:
+                try:
+                    friend_list.append(friend)
+                except:
+                    friend_list.append("NONE")
+        cursor = friends['next_cursor']
+        if cursor != 0:
+            time.sleep(30)
+            friend_list += get_friends_ids(make_twitter_request(twitter_api.friends.ids, screen_name=handle, cursor=cursor, count=5000))
+        return friend_list
 
 def get_friends_screen_names(friends):
     friend_list = []
-    for friend in friends['users']:
-        if friend is not None:
-            try:
-                friend_list.append(friend['screen_name'])
-            except:
-                friend_list.append("NONE")
-    cursor = friends['next_cursor']
-    if cursor != 0:
-        time.sleep(30)
-        friend_list += get_friends_screen_names(make_twitter_request(twitter_api.friends.ids, screen_name=handle, cursor=cursor, count=5000))
-    return friend_list
+    if friends is None:
+        return friend_list
+    else:
+        for friend in friends['users']:
+            if friend is not None:
+                try:
+                    friend_list.append(friend['screen_name'])
+                except:
+                    friend_list.append("NONE")
+        cursor = friends['next_cursor']
+        if cursor != 0:
+            time.sleep(30)
+            friend_list += get_friends_screen_names(make_twitter_request(twitter_api.friends.ids, screen_name=handle, cursor=cursor, count=5000))
+        return friend_list
 
 
 def get_followers_ids(followers):
     follower_list = []
-    for follower in followers['ids']:
-        if follower is not None:
-            try:
-                follower_list.append(follower)
-            except:
-                follower_list.append("NONE")
-    cursor = followers['next_cursor']
-    if cursor != 0:
-        time.sleep(30)
-        follower_list += get_followers_ids(make_twitter_request(twitter_api.followers.ids, screen_name=handle, cursor=cursor, count=5000))
-    return follower_list
+    if followers is None:
+        return follower_list
+    else:
+        for follower in followers['ids']:
+            if follower is not None:
+                try:
+                    follower_list.append(follower)
+                except:
+                    follower_list.append("NONE")
+        cursor = followers['next_cursor']
+        if cursor != 0:
+            time.sleep(30)
+            follower_list += get_followers_ids(make_twitter_request(twitter_api.followers.ids, screen_name=handle, cursor=cursor, count=5000))
+        return follower_list
 
 
 def get_followers_screen_names(followers):
     follower_list = []
-    for follower in followers['users']:
-        if follower is not None:
-            try:
-                follower_list.append(follower['screen_name'])
-            except:
-                follower_list.append("NONE")
-    cursor = followers['next_cursor']
-    if cursor != 0:
-        time.sleep(30)
-        follower_list += get_followers_screen_names(make_twitter_request(twitter_api.followers.ids, screen_name=handle, cursor=cursor, count=5000))
-    return follower_list
+    if followers is None:
+        return follower_list
+    else:
+        for follower in followers['users']:
+            if follower is not None:
+                try:
+                    follower_list.append(follower['screen_name'])
+                except:
+                    follower_list.append("NONE")
+        cursor = followers['next_cursor']
+        if cursor != 0:
+            time.sleep(30)
+            follower_list += get_followers_screen_names(make_twitter_request(twitter_api.followers.ids, screen_name=handle, cursor=cursor, count=5000))
+        return follower_list
 
 
 
