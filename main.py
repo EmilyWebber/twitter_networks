@@ -143,6 +143,11 @@ def fs_collector(ids_or_screen_names, friends, followers, label, db_name, coll_n
     save_to_mongo({label: {"friends": friend_list, "followers": follower_list}}, db_name, coll_name)
 
 
+#def fs_collector_looper(screen_name
+
+#def harvester(db, collection, destination_db, destination_collection):
+    
+
 
 ######################
 ## TWITTER TO MONGO ##
@@ -160,11 +165,11 @@ def save_to_mongo(data, mongo_db, mongo_db_coll, **mongo_conn_kw):
     coll = db[mongo_db_coll]
     return coll.insert(data)
 
-def load_from_mongo(mongo_db, mong_db_coll, return_cursor=False, criteria=None, projection=None, **mongo_conn_kw):
+def load_from_mongo(mongo_db, db_coll, return_cursor=False, criteria=None, projection=None, **mongo_conn_kw):
     client = pm.MongoClient(**mongo_conn_kw)
     db = client[mongo_db]
-    coll = db[mongo_db_coll]
-
+    coll = db[db_coll]
+    '''
     if criteria is None:
         criteria = {}
 
@@ -177,6 +182,8 @@ def load_from_mongo(mongo_db, mong_db_coll, return_cursor=False, criteria=None, 
         return cursor
     else:
         return [ item for item in cursor ]
+    '''
+    return coll.find()
 
 def many_to_mongodb(tweets, db, collection):  # probablly need **kwargs
     client = pm.MongoClient()
@@ -220,9 +227,15 @@ if __name__ == '__main__':
     twitter_api = oauth_login(keys)
 
     #firehose(twitter_api, write_db, query)
+
+    load_results = get_cursor_contents(load_from_mongo('test_firehose_write', 'tsa'),
+        'user', 'id', 'ids')
+    
+    print load_results
+    '''
     friend_list = []
     follower_list = []
     friends = twitter_api.friends.ids(screen_name=handle, count=5000)
     followers = twitter_api.followers.ids(screen_name=handle, count=5000)
     fs_collector(id_or_sn, friends, followers, handle, query, 'peeps')
-
+    '''
