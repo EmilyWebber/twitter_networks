@@ -157,7 +157,7 @@ def harvester(db, collection, destination_db, destination_collection):
         time.sleep(30)        
         friends = twitter_api.friends.ids(user_id=user_id, count=5000)
         followers = twitter_api.followers.ids(user_id=user_id, count=5000)
-        fs_collector(id_or_sn, friends, followers, user_id, destination_db, destination_collection)
+        fs_collector(id_or_sn, friends, followers, str(user_id), destination_db, destination_collection)
 
     
 
