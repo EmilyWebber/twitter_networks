@@ -139,11 +139,11 @@ def get_followers_screen_names(followers):
 
 def fs_collector(ids_or_screen_names, friends, followers, label, db_name, coll_name):
     if ids_or_screen_names == 'ids':
-        get_friends_ids(friends)
-        get_followers_ids(followers)
+        friend_list =  get_friends_ids(friends)
+        follower_list = get_followers_ids(followers)
     else:
-        get_friends_screen_names(friends)
-        get_followers_screen_names(followers)
+        friend_list = get_friends_screen_names(friends)
+        follower_list = get_followers_screen_names(followers)
     save_to_mongo({label: {"friends": friend_list, "followers": follower_list}}, db_name, coll_name)
 
 
@@ -157,7 +157,7 @@ def harvester(db, collection, destination_db, destination_collection):
         time.sleep(30)        
         friends = twitter_api.friends.ids(user_id=user_id, count=5000)
         followers = twitter_api.followers.ids(user_id=user_id, count=5000)
-        fs_collector(id_or_sn, friends, followers, destination_db, destination_collection)
+        fs_collector(id_or_sn, friends, followers, user_id, destination_db, destination_collection)
 
     
 
