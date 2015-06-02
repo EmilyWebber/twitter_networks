@@ -88,7 +88,7 @@ def get_friends_ids(friends):
     cursor = friends['next_cursor']
     if cursor != 0:
         time.sleep(30)
-        friend_list += get_friends(twitter_api.friends.ids(screen_name=handle, cursor=cursor, count=5000))
+        friend_list += get_friends_ids(twitter_api.friends.ids(screen_name=handle, cursor=cursor, count=5000))
     return friend_list
 
 def get_friends_screen_names(friends):
@@ -102,7 +102,7 @@ def get_friends_screen_names(friends):
     cursor = friends['next_cursor']
     if cursor != 0:
         time.sleep(30)
-        friend_list += get_friends(twitter_api.friends.ids(screen_name=handle, cursor=cursor, count=5000))
+        friend_list += get_friends_screen_names(twitter_api.friends.ids(screen_name=handle, cursor=cursor, count=5000))
     return friend_list
 
 
@@ -117,8 +117,9 @@ def get_followers_ids(followers):
     cursor = followers['next_cursor']
     if cursor != 0:
         time.sleep(30)
-        follower_list += get_followers(twitter_api.followers.ids(screen_name=handle, cursor=cursor, count=5000))
+        follower_list += get_followers_ids(twitter_api.followers.ids(screen_name=handle, cursor=cursor, count=5000))
     return follower_list
+
 
 def get_followers_screen_names(followers):
     follower_list = []
@@ -131,7 +132,7 @@ def get_followers_screen_names(followers):
     cursor = followers['next_cursor']
     if cursor != 0:
         time.sleep(30)
-        follower_list += get_followers(twitter_api.followers.ids(screen_name=handle, cursor=cursor, count=5000))
+        follower_list += get_followers_screen_names(twitter_api.followers.ids(screen_name=handle, cursor=cursor, count=5000))
     return follower_list
 
 
