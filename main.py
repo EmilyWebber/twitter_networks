@@ -77,11 +77,20 @@ def firehose(twitter_api, write_db, query):
         #print type(output), ' : ', output
         #return tweet
 
-'''
-def friender(friends, screen_name=None, 
-'''
+def get_friends_ids(friends):
+    for friend in friends['ids']:
+        if friend is not None:
+            try:
+                friend_list.append(friend)
+            except:
+                friend_list.append("NONE")
+    cursor = friends['next_cursor']
+    if cursor != 0:
+        time.sleep(30)
+        get_friends(twitter_api.friends.ids(screen_name=handle, cursor=cursor, count=5000))
+    return friend_list
 
-def get_friends(friends):
+def get_friends_screen_names(friends):
     for friend in friends['users']:
         if friend is not None:
             try:
@@ -90,7 +99,48 @@ def get_friends(friends):
                 friend_list.append("NONE")
     cursor = friends['next_cursor']
     if cursor != 0:
-        get_friends(twitter_api.friends.list(screen_name=friends_of, cursor=cursor, count=5000))
+        time.sleep(30)
+        get_friends(twitter_api.friends.ids(screen_name=handle, cursor=cursor, count=5000))
+    return friend_list
+
+
+def get_followers_ids(followers):
+    for follower in followers['ids']:
+        if follower is not None:
+            try:
+                follower_list.append(follower)
+            except:
+                follower_list.append("NONE")
+    cursor = followers['next_cursor']
+    if cursor != 0:
+        time.sleep(30)
+        get_followers(twitter_api.followers.ids(screen_name=handle, cursor=cursor, count=5000))
+    return follower_list
+
+def get_followers_screen_names(followers):
+    for follower in followers['users']:
+        if follower is not None:
+            try:
+                follower_list.append(follower['screen_name'])
+            except:
+                follower_list.append("NONE")
+    cursor = followers['next_cursor']
+    if cursor != 0:
+        time.sleep(30)
+        get_followers(twitter_api.followers.ids(screen_name=handle, cursor=cursor, count=5000))
+    return follower_list
+
+
+
+
+def fs_collector(ids_or_screen_names, friends, followers, label, db_name, coll_name):
+    if ids_or_screen_names == 'ids':
+        get_friends_ids(friends)
+        get_followers_ids(followers)
+    else:
+        get_friends_screen_names(friends)
+        get_followers_screen_names(followers)
+    save_to_mongo({label: {"friends": friend_list, "followers": follower_list}}, db_name, coll_name)
 
 
 
@@ -164,17 +214,15 @@ if __name__ == '__main__':
     keys = parse_keys(sys.argv[1])
     query = sys.argv[2]
     write_db = sys.argv[3]
-    friends_of = sys.argv[4]
+    handle = sys.argv[4]
+    id_or_sn = sys.argv[5]
 
     twitter_api = oauth_login(keys)
 
     #firehose(twitter_api, write_db, query)
+    friend_list = []
+    follower_list = []
+    friends = twitter_api.friends.ids(screen_name=handle, count=5000)
+    followers = twitter_api.followers.ids(screen_name=handle, count=5000)
+    fs_collector(id_or_sn, friends, followers, handle, query, 'peeps')
 
-    friend_list=[]
-    friends = twitter_api.friends.list(screen_name=friends_of, count=5000)
-    get_friends(friends)
-
-    i = 0
-    for friend in friend_list:
-        i += 1
-        print i, friend
