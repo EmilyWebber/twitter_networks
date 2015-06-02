@@ -4,10 +4,13 @@ import json
 import pymongo as pm
 import time
 import datetime
+from urllib2 import URLError
+from httplib import BadStatusLine
 
 
 '''
-A significant portion of set up help was gleaned from the following site:
+A significant portion of set up help was gleaned or outright copied
+ from the following site:
 https://rawgit.com/ptwobrussell/Mining-the-Social-Web-2nd-Edition/master/
     ipynb/html/Chapter%209%20-%20Twitter%20Cookbook.html
 '''
@@ -40,6 +43,77 @@ def oauth_login(keys):
 ########################
 ## ACCESS TWITTER API ##
 ########################
+
+# Straight copied save for max errors
+def make_twitter_request(twitter_api_func, max_errors=10000, *args, **kw): 
+    
+    # A nested helper function that handles common HTTPErrors. Return an updated
+    # value for wait_period if the problem is a 500 level error. Block until the
+    # rate limit is reset if it's a rate limiting issue (429 error). Returns None
+    # for 401 and 404 errors, which requires special handling by the caller.
+    def handle_twitter_http_error(e, wait_period=2, sleep_when_rate_limited=True):
+    
+        if wait_period > 3600: # Seconds
+            print >> sys.stderr, 'Too many retries. Quitting.'
+            raise e
+    
+        # See https://dev.twitter.com/docs/error-codes-responses for common codes
+    
+        if e.e.code == 401:
+            print >> sys.stderr, 'Encountered 401 Error (Not Authorized)'
+            return None
+        elif e.e.code == 404:
+            print >> sys.stderr, 'Encountered 404 Error (Not Found)'
+            return None
+        elif e.e.code == 429: 
+            print >> sys.stderr, 'Encountered 429 Error (Rate Limit Exceeded)'
+            if sleep_when_rate_limited:
+                print >> sys.stderr, "Retrying in 15 minutes...ZzZ..."
+                sys.stderr.flush()
+                time.sleep(60*15 + 5)
+                print >> sys.stderr, '...ZzZ...Awake now and trying again.'
+                return 2
+            else:
+                raise e # Caller must handle the rate limiting issue
+        elif e.e.code in (500, 502, 503, 504):
+            print >> sys.stderr, 'Encountered %i Error. Retrying in %i seconds' % \
+                (e.e.code, wait_period)
+            time.sleep(wait_period)
+            wait_period *= 1.5
+            return wait_period
+        else:
+            raise e
+
+    # End of nested helper function
+    
+    wait_period = 2 
+    error_count = 0 
+
+    while True:
+        try:
+            return twitter_api_func(*args, **kw)
+        except twitter.api.TwitterHTTPError, e:
+            error_count = 0 
+            wait_period = handle_twitter_http_error(e, wait_period)
+            if wait_period is None:
+                return
+        except URLError, e:
+            error_count += 1
+            print >> sys.stderr, "URLError encountered. Continuing."
+            if error_count > max_errors:
+                print >> sys.stderr, "Too many consecutive errors...bailing out."
+                raise
+        except BadStatusLine, e:
+            error_count += 1
+            print >> sys.stderr, "BadStatusLine encountered. Continuing."
+            if error_count > max_errors:
+                print >> sys.stderr, "Too many consecutive errors...bailing out."
+                raise
+
+
+
+
+
 
 def twitter_search(twitter_api, query, max_results=200, **kw):
     search_results = twitter_api.search.tweets(q=query, count=100, **kw)
@@ -88,7 +162,7 @@ def get_friends_ids(friends):
     cursor = friends['next_cursor']
     if cursor != 0:
         time.sleep(30)
-        friend_list += get_friends_ids(twitter_api.friends.ids(screen_name=handle, cursor=cursor, count=5000))
+        friend_list += get_friends_ids(make_twitter_request(twitter_api.friends.ids(screen_name=handle, cursor=cursor, count=5000)))
     return friend_list
 
 def get_friends_screen_names(friends):
@@ -102,7 +176,7 @@ def get_friends_screen_names(friends):
     cursor = friends['next_cursor']
     if cursor != 0:
         time.sleep(30)
-        friend_list += get_friends_screen_names(twitter_api.friends.ids(screen_name=handle, cursor=cursor, count=5000))
+        friend_list += get_friends_screen_names(make_twitter_request(twitter_api.friends.ids(screen_name=handle, cursor=cursor, count=5000)))
     return friend_list
 
 
@@ -117,7 +191,7 @@ def get_followers_ids(followers):
     cursor = followers['next_cursor']
     if cursor != 0:
         time.sleep(30)
-        follower_list += get_followers_ids(twitter_api.followers.ids(screen_name=handle, cursor=cursor, count=5000))
+        follower_list += get_followers_ids(make_twitter_request(twitter_api.followers.ids(screen_name=handle, cursor=cursor, count=5000)))
     return follower_list
 
 
@@ -132,7 +206,7 @@ def get_followers_screen_names(followers):
     cursor = followers['next_cursor']
     if cursor != 0:
         time.sleep(30)
-        follower_list += get_followers_screen_names(twitter_api.followers.ids(screen_name=handle, cursor=cursor, count=5000))
+        follower_list += get_followers_screen_names(make_twitter_request(twitter_api.followers.ids(screen_name=handle, cursor=cursor, count=5000)))
     return follower_list
 
 
@@ -156,8 +230,8 @@ def harvester(db, collection, destination_db, destination_collection):
 
     for user_id in user_ids:
         time.sleep(30)        
-        friends = twitter_api.friends.ids(user_id=user_id, count=5000)
-        followers = twitter_api.followers.ids(user_id=user_id, count=5000)
+        friends = make_twitter_request(twitter_api.friends.ids(user_id=user_id, count=5000))
+        followers = make_twitter_request(twitter_api.followers.ids(user_id=user_id, count=5000))
         fs_collector(id_or_sn, friends, followers, str(user_id), destination_db, destination_collection)
 
     
