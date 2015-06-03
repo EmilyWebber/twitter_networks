@@ -241,7 +241,6 @@ def harvester(db, collection, destination_db, destination_collection):
         'user', 'id')
 
     for user_id in user_ids:
-        print datetime.datetime.now()
         time.sleep(30)        
         friends = make_twitter_request(twitter_api.friends.ids, user_id=user_id, count=5000)
         followers = make_twitter_request(twitter_api.followers.ids, user_id=user_id, count=5000)
@@ -317,7 +316,7 @@ def build_graph(database, collection):
     for i in range(coll_length):
        builder(int(coll.find()[i]["user_id"]), coll.find()[i]["friends"], coll.find()[i]["followers"], graph)
 
-    print graph.Empty()
+    #print graph.Empty()
     print "Nodes:" 
     print graph.GetNodes()
     print "Edges:"
@@ -327,8 +326,8 @@ def build_graph(database, collection):
     print "Triads:"
     print snap.GetTriads(graph,-1)
 
-    H = snap.TIntStrH()
-    snap.SaveGViz(graph, 'tsa_network_graph.gv', 'tsa Network', False, H)
+    #H = snap.TIntStrH()
+    #snap.SaveGViz(graph, 'tsa_network_graph.dot', 'tsa Network', False, H)
 
 
 def builder(user_id, friends, followers, graph):
@@ -391,7 +390,7 @@ if __name__ == '__main__':
 
     twitter_api = oauth_login(keys)
 
-    #firehose(twitter_api, write_db, query)
+    firehose(twitter_api, write_db, query)
 
-    harvester('test_firehose_write', 'blacklivesmatter', 'blm_network_3', 'ids')
+    #harvester('test_firehose_write', 'blacklivesmatter', 'blm_network_2', 'ids')
     #build_graph('tsa_network_2','ids')
