@@ -306,7 +306,7 @@ def get_from_mongodb(db, collection, i):
     #coll = database.collection
     return coll.find()[i]["user_id"], coll.find()[i]["friends"], coll.find()[i]["followers"]
 
-def build_graph(database, collection):
+def build_graph(database, collection, savefile_loc, graph_title, counter):
     client = pm.MongoClient()
     db = client[database]
     coll = db[collection]
@@ -316,20 +316,23 @@ def build_graph(database, collection):
     coll_length = coll.count()
     for i in range(coll_length):
        builder(int(coll.find()[i]["user_id"]), coll.find()[i]["friends"], coll.find()[i]["followers"], graph)
+       counter += 1
+       print counter
+
 
     print graph.Empty()
     print "Nodes:" 
     print graph.GetNodes()
     print "Edges:"
     print graph.GetEdges()
-    print "Custering Coefficients:"
-    print snap.GetClustCf(graph,-1)
-    print "Triads:"
-    print snap.GetTriads(graph,-1)
+    #print "Custering Coefficients:"
+    #print snap.GetClustCf(graph,-1)
+    #print "Triads:"
+    #print snap.GetTriads(graph,-1)
 
-    H = snap.TIntStrH()
-    snap.SaveGViz(graph, 'tsa_network_graph.gv', 'tsa Network', False, H)
-
+    #H = snap.TIntStrH()
+    #snap.SaveGViz(graph, savefile_loc, graph_title, False, H)
+    snap.SaveEdgeList(graph, savefile_loc, graph_title)
 
 def builder(user_id, friends, followers, graph):
     try:
@@ -364,7 +367,6 @@ def builder(user_id, friends, followers, graph):
 
 
 
-
 #################
 ## MONGO TESTS ##
 #################
@@ -383,15 +385,16 @@ def test_print(tweets, database, collection):
 
 
 if __name__ == '__main__':
-    keys = parse_keys(sys.argv[1])
-    query = sys.argv[2]
-    write_db = sys.argv[3]
-    handle = sys.argv[4]
-    id_or_sn = sys.argv[5]
+    keys = parse_keys(sys.argv[1])  # bridgit_keys.txt
+    query = sys.argv[2]             # love or chicago or blacklivesmatter
+    write_db = sys.argv[3]          # test_firehose_write
+    handle = sys.argv[4]            # None
+    id_or_sn = sys.argv[5]          # ids ... matters only for harvester
 
     twitter_api = oauth_login(keys)
 
     #firehose(twitter_api, write_db, query)
 
-    harvester('test_firehose_write', 'blacklivesmatter', 'blm_network_3', 'ids')
-    #build_graph('tsa_network_2','ids')
+    #harvester('test_firehose_write', 'blacklivesmatter', 'blm_network_4', 'ids')
+    i = 0
+    build_graph('blm_network_4', 'ids', 'outputs/blm_graph.gv', 'BlackLivesMatter', i)
