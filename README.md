@@ -18,13 +18,14 @@ To answer these questions, we looked to accomplish the following (descriptions o
 ## A Note on Our Network Analysis Approach
 In approaching this project, we did outside research on network analysis measures. 
 
-
 We wanted to use a __directed graph__ (tweets’ flow: user’s friends → user → user’s followers) We first had to determine how to define the __nodes__ (a given agent in a network graph) and __edges__ (the connections between agents in a network graph). We settled on the following:
-
-
+* node = individual twitter handle
+* edge = how individual tweet’s information flowed
 
 We settled on exploring the following methods of measuring of our `blacklivesmatter` network:
-* 
+* Network-level metrics: nodes, edges, clustering coefficient, triads
+* Node-level metric: eccentricity
+
  
 ## Results
 ####Network Calculations
@@ -35,10 +36,19 @@ Edges | 63,437 | 3,285,611 |
 Clustering Coefficient | 0.00244 | 0.0326 |
 Triads | 411 | 1,128,964 |
 
+###Node Eccentricity
+####Node Eccentricity for directed `tsa` network
+![histogram of node eccentricity for directed `tsa`](https://github.com/jpheisel/twitter_networks/blob/master/images/tsa_directed.png)
 
-<table with network calculations for `tsa` and `blacklivesmatter`>
-<insert histogram of node eccentricity for `tsa`>
-<insert histogram of tweet length for `blacklivesmatter`>
+####Node Eccentricity for undirected `tsa` network
+![histogram of node eccentricity for undirected `tsa`](https://github.com/jpheisel/twitter_networks/blob/master/images/tsa_undirected.png)
+
+###Tweet Length Distribution
+####BlackLivesMatter
+![dist of blm](https://github.com/jpheisel/twitter_networks/blob/master/images/blm.png)
+
+####Love
+![dist of love](https://github.com/jpheisel/twitter_networks/blob/master/images/love.png)
 
 ## Step Descriptions
 Each step outlined above required its own unique infrastructure and package dependencies:
@@ -78,29 +88,4 @@ Since our presentation, we accomplished the following:
 * Built a graph of the `blacklivesmatter` network and calculated the clustering coefficient and number of triads
 * Conducted significant exploration of AWS offerings in an attempt to parallelize node eccentricity calculations
 * Developed scalable MapReduce code using MongoDB’s built-in MapReduce function to calculate the distribution of tweet length across both the `blacklivesmatter` and `love` networks
-
-
-----------------------------------------
------------------------------------------
-Random thoughts:
-- explored using EC2 cluster w/ S3 & EMR
-
-
-For the writeup, please address:
-- [x] Your dataset: size, description, format, etc.
-- [x] Your hypotheses
-- [x] The algorithms you used (i.e. the types of analysis you performed and how)
-- [x] The big data approaches you adopted (multiple processes? threads? MapReduce? etc.); please describe in detail how you stored your data and parallelized your work
-(To be clear what the difference is between the last two: the first is "we used k-nearest neighbors" and the second is "we implemented k-NN using MapReduce.")
-- [ ] Talk about anything you may have learned from doing the project specifically, beyond material covered in the class
-- [x] Discuss challenges, ones you overcame and ones that were insurmountable
-- [ ] Share the results of your analyses and how they reflect on the hypotheses
-- [x] If you got new results or made progress since your presentation, please make sure it is clear what changed since the presentation; I don't want to miss the opportunity to give you credit for additional work
-
-
-
-
-
-
-
 
