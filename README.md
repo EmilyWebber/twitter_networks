@@ -53,7 +53,7 @@ Triads | 411 | 1,128,964 |
 ## Step Descriptions
 Each step outlined above required its own unique infrastructure and package dependencies:
 
-__Initial Data Collection:__ We registered for [Twitter Application Keys](https://apps.twitter.com/) and used the public streaming API to collect roughly 55GB worth of Twitter data. This data consisted of raw tweets using our target text (`BlackLivesMatter`) as well as two other test sets using the text (`love` and `tsa` - "TSA" had been trending at the time of this project). Twitter data comes in JSON format.
+__Initial Data Collection:__ We registered for [Twitter Application Keys](https://apps.twitter.com/) and used the public streaming API to collect roughly ~50GB worth of Twitter data. This data consisted of raw tweets using our target text (`BlackLivesMatter`) as well as two other test sets using the text (`love` and `tsa` - "TSA" had been trending at the time of this project). Twitter data comes in JSON format.
 
 __MongoDB:__ Since the Twitter API returns data in JSON format, we wanted to store it in a NoSQL database in order to avoid unneeded and time consuming data manipulation. We launched an EC2 instance with AWS pre-installed from the [AWS Marketplace](https://aws.amazon.com/marketplace/pp/B00CO7AVMY).
 
