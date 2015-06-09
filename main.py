@@ -1,6 +1,7 @@
 import twitter
 import sys
 import json
+import csv
 import pymongo as pm
 import time
 import datetime
@@ -325,6 +326,7 @@ def build_graph(database, collection, savefile_loc, graph_title, counter):
     print graph.GetNodes()
     print "Edges:"
     print graph.GetEdges()
+
     #print "Custering Coefficients:"
     #print snap.GetClustCf(graph,-1)
     #print "Triads:"
@@ -332,7 +334,20 @@ def build_graph(database, collection, savefile_loc, graph_title, counter):
 
     #H = snap.TIntStrH()
     #snap.SaveGViz(graph, savefile_loc, graph_title, False, H)
-    snap.SaveEdgeList(graph, savefile_loc, graph_title)
+    #snap.SaveEdgeList(graph, savefile_loc, graph_title)
+
+
+
+def calc_eccents(graph, file_output):
+
+    z = 0
+    with open(file_output, 'w') as csvfile:
+        node_writer = csv.writer(csvfile, delimiter=',')
+        for node in graph.Nodes():
+            node_writer.writerow([node, snap.GetNodeEcc(graph, node.GetId(), True)])
+            z += 1
+            print 'z: ' + str(z)
+     
 
 def builder(user_id, friends, followers, graph):
     try:
@@ -340,7 +355,12 @@ def builder(user_id, friends, followers, graph):
     except:
         pass
 
+    q = 0
+    y = 0
+
     for f in friends:
+        q += 1
+  
         f = int(f)
         try:
             graph.AddNode(f)
@@ -352,7 +372,11 @@ def builder(user_id, friends, followers, graph):
         except:
             pass
 
+    print "friend count: " + str(q)    
+
     for f in followers:
+        y += 1
+   
         f = int(f)
         try:
             graph.AddNode(f)
@@ -364,7 +388,7 @@ def builder(user_id, friends, followers, graph):
         except:
             pass
 
-
+    print "follower count: " + str(y)
 
 
 #################
