@@ -42,7 +42,8 @@ __Collecting Network Data__: This was a time-intensive process, as the Twitter R
 __Graph Analysis__: We initially hoped to visualize the resulting graph, but `graphviz` (the package suggested by SNAP) could not process such a large graph. Additionally, we struggled (or maybe not?) to parallelize the node eccentricity calculation across multiple instances.
 
 ----------------------------------------
-JP's thoughts:
+-----------------------------------------
+Random thoughts:
 - considered EC2 cluster w/ S3 & EMR
 
 
@@ -55,4 +56,4 @@ For the writeup, please address:
 - [ ] Talk about anything you may have learned from doing the project specifically, beyond material covered in the class
 - [x] Discuss challenges, ones you overcame and ones that were insurmountable
 - [ ] Share the results of your analyses and how they reflect on the hypotheses
-- [ ]If you got new results or made progress since your presentation, please make sure it is clear what changed since the presentation; I don't want to miss the opportunity to give you credit for additional work
+- [ ] If you got new results or made progress since your presentation, please make sure it is clear what changed since the presentation; I don't want to miss the opportunity to give you credit for additional work
