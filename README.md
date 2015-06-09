@@ -4,7 +4,7 @@ This repository contains the code for our final project for CS123 as part of the
 ######Complete code can be found in `main.py`. Other files were temporary code snippets in developing the final code.
 
 ## Our Goals
-For this project, we wanted to answer the questions: What does the network of Twitter users tweeting with the hashtag `#BlackLivesMatter` look like? What is the density of this network (i.e. how connected is it)?
+For this project, we wanted to answer the questions: What does the network of Twitter users tweeting with the hashtag `#BlackLivesMatter` look like? What is the connectivity & centrality of this network (i.e. how connected is it)?
 
 To answer these questions, we looked to accomplish the following (descriptions of each are below):
 - [x] Collect Twitter data utilizing the Twitter API
