@@ -88,6 +88,3 @@ Since our presentation, we accomplished the following:
 * Built a graph of the `blacklivesmatter` network and calculated the clustering coefficient and number of triads
 * Conducted significant exploration of AWS offerings in an attempt to parallelize node eccentricity calculations
 * Developed scalable MapReduce code using MongoDB’s built-in MapReduce function to calculate the distribution of tweet length across both the `blacklivesmatter` and `love` networks
-
-
-** Emily was here **
