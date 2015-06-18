@@ -1,5 +1,5 @@
 # twitter_networks
-This repository contains the code for our final project for CS123 as part of the MS CAPP computer science sequence. 
+This repository contains the code for our final project for CS123 as part of the MS CAPP computer science sequence.
 
 ######Complete code can be found in `main.py` and `mapreduce.js`. Other files were temporary code snippets in developing the final code. Note that EC2 instance was set up in Bridgit Donnelly’s name so all commits from the EC2 instance appeared under her name. However, both Bridgit and J.P. committed code equally.
 
@@ -16,7 +16,7 @@ To answer these questions, we looked to accomplish the following (descriptions o
 - [x] Utilize big data techniques to calculate network characteristics of the `BlackLivesMatter` network
 
 ## A Note on Our Network Analysis Approach
-In approaching this project, we did outside research on network analysis measures. 
+In approaching this project, we did outside research on network analysis measures.
 
 We wanted to use a __directed graph__ (tweets’ flow: user’s friends → user → user’s followers) We first had to determine how to define the __nodes__ (a given agent in a network graph) and __edges__ (the connections between agents in a network graph). We settled on the following:
 * node = individual twitter handle
@@ -26,7 +26,7 @@ We settled on exploring the following methods of measuring of our `blacklivesmat
 * Network-level metrics: nodes, edges, clustering coefficient, triads
 * Node-level metric: eccentricity
 
- 
+
 ## Results
 ####Network Calculations
 Calculation | `tsa` | `blacklivesmatter` |
@@ -59,7 +59,7 @@ __MongoDB:__ Since the Twitter API returns data in JSON format, we wanted to sto
 
 __Connecting Twitter to MongoDB__: We used a package called PyMongo (`pip install pymongo`) to connect our Twitter queries to MongoDB. MongoDB, a NoSQL database, allowed us to store the Twitter JSON files in their original format, bypassing the need to spend computational resources in order to create a new structure for the data.
 
-__Collecting Network Data__: Once we collected Tweets, we then queried the Twitter REST API, looking for the friends and followers of each user who had tweeted about `BlackLivesMatter`. 
+__Collecting Network Data__: Once we collected Tweets, we then queried the Twitter REST API, looking for the friends and followers of each user who had tweeted about `BlackLivesMatter`.
 
 __Graph Analysis__: To analyze the resulting network from our Twitter collection, we used [SNAP](http://snap.stanford.edu/snappy/index.html), a scalable graph analysis package. Within this package, we measured the density of our network by calculating the __node eccentricity__ of every node. After testing this on the smaller `tsa` dataset (47,485 nodes and 63,437 edges), we attempted to use Elastic Map Reduce across 20 AWS instances in order to scale up our graph code to calculate node eccentricty for `BlackLivesMatter` (1,507,195 nodes and 3,285,611 edges).
 
@@ -89,3 +89,5 @@ Since our presentation, we accomplished the following:
 * Conducted significant exploration of AWS offerings in an attempt to parallelize node eccentricity calculations
 * Developed scalable MapReduce code using MongoDB’s built-in MapReduce function to calculate the distribution of tweet length across both the `blacklivesmatter` and `love` networks
 
+
+** Emily was here **
